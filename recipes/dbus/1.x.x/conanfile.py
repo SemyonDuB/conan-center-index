@@ -33,9 +33,6 @@ class DbusConan(ConanFile):
     _build_subfolder = "build_subfolder"
     _cmake = None
 
-    requires = (
-        "expat/2.2.9"
-    )
 
     def config_options(self):
         if self.settings.os == 'Windows':
@@ -49,8 +46,9 @@ class DbusConan(ConanFile):
         os.rename(extracted_dir, self._source_subfolder)
 
     def requirements(self):
+        self.requires("expat/2.2.10")
         if self.options.with_glib:
-            self.requires("glib/2.65.0")
+            self.requires("glib/2.67.0")
 
         if self.options.with_x11:
             self.requires("xorg/system")
