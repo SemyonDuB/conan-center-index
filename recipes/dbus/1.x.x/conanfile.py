@@ -5,7 +5,7 @@ import shutil
 
 class DbusConan(ConanFile):
     name = "dbus"
-    license = "AFL-2.1"
+    license = ("AFL-2.1", "GPL-2.0-or-later")
     url = "https://github.com/conan-io/conan-center-index"
     homepage = "https://www.freedesktop.org/wiki/Software/dbus"
     description = "D-Bus is a simple system for interprocess communication and coordination."
@@ -38,13 +38,12 @@ class DbusConan(ConanFile):
 
     _cmake = None
 
-    def config_options(self):
+    def configure(self):
         if self.settings.os == 'Windows':
             raise ConanInvalidConfiguration("D-Bus is not compatible with Windows")
         if self.settings.os == "Macos":
             raise ConanInvalidConfiguration("D-Bus is not compatible with MacOS")
     
-    def configure(self):
         del self.settings.compiler.libcxx
         del self.settings.compiler.cppstd
 
