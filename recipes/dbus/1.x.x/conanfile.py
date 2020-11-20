@@ -13,7 +13,6 @@ class DbusConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
 
     options = {
-        "fPIC": [True, False],
         "with_x11": [True, False],
         "with_glib": [True, False],
         "enable_assert": [True, False],
@@ -21,7 +20,6 @@ class DbusConan(ConanFile):
         "install_system_libs": [True, False]}
 
     default_options = {
-        "fPIC": True,
         "with_x11": False,
         "with_glib": False,
         "enable_assert": True,
@@ -37,7 +35,7 @@ class DbusConan(ConanFile):
     @property
     def _build_subfolder(self):
         return "build_subfolder"
-        
+
     _cmake = None
 
     def config_options(self):
@@ -45,6 +43,10 @@ class DbusConan(ConanFile):
             raise ConanInvalidConfiguration("D-Bus is not compatible with Windows")
         if self.settings.os == "Macos":
             raise ConanInvalidConfiguration("D-Bus is not compatible with MacOS")
+    
+    def configure(self):
+        del self.settings.compiler.libcxx
+        del self.settings.compiler.cppstd
 
     def source(self):
         tools.get(**self.conan_data["sources"][self.version])
