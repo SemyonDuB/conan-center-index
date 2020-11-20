@@ -1,6 +1,7 @@
 import os
 from conans import CMake, ConanFile, tools
 from conans.errors import ConanInvalidConfiguration
+import shutil
 
 class DbusConan(ConanFile):
     name = "dbus"
@@ -29,10 +30,15 @@ class DbusConan(ConanFile):
 
     generators = "cmake", "cmake_find_package", "cmake_paths"
 
-    _source_subfolder = "source_subfolder"
-    _build_subfolder = "build_subfolder"
-    _cmake = None
+    @property
+    def _source_subfolder(self):
+        return "source_subfolder"
 
+    @property
+    def _build_subfolder(self):
+        return "build_subfolder"
+        
+    _cmake = None
 
     def config_options(self):
         if self.settings.os == 'Windows':
@@ -90,8 +96,8 @@ class DbusConan(ConanFile):
         cmake = self._configure_cmake()
         cmake.install()
 
-        for i in ["var", "share", "bin", "etc"]:
-            tools.rmdir(os.path.join(self.package_folder, i))
+        for i in ["var", "share", "etc"]:
+            shutil.move(os.path.join(self.package_folder, i), os.path.join(self.package_folder, "res", i))
 
         tools.rmdir(os.path.join(self.package_folder, "lib", "cmake"))
         tools.rmdir(os.path.join(self.package_folder, "lib", "pkgconfig"))
